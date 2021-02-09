@@ -68,13 +68,11 @@ func handleRequests() {
 }
 
 func main() {
-	dsn := "root:Passw0rd@tcp(172.17.0.1:3306)/orgonogram?charset=utf8mb4&parseTime=True&loc=Local"
+	dsn := "root:Passw0rd@tcp(mysql:3306)/organogram"
 
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
-	fmt.Printf("%v", db)
-
 	if err != nil {
-		panic("failed to connect to database")
+		panic(fmt.Sprintf("failed to connect to database: %v", err))
 	}
 
 	db.AutoMigrate(&models.Title{})
