@@ -7,6 +7,7 @@ import (
 
 type Title struct {
 	gorm.Model
-	Id   uuid.UUID
+	Id   int32
+	Guid uuid.UUID
 	Name string
 }
