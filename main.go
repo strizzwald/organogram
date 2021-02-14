@@ -5,10 +5,12 @@ import (
 	"log"
 	"math"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
+	"github.com/joho/godotenv"
 	"github.com/strizzwald/orgonogram/controllers"
 	"github.com/strizzwald/orgonogram/domain/entities"
 	"gorm.io/driver/mysql"
@@ -31,7 +33,19 @@ func main() {
 	var db *gorm.DB
 	var err error
 
-	dsn := "organogramapi:P@ssw0rd@tcp(mysql:3306)/organogram?charset=utf8mb4&parseTime=True&loc=Local"
+	err = godotenv.Load()
+
+	if err != nil {
+		log.Fatalf("Error loading .env file")
+	}
+
+	dbUser := os.Getenv("DB_USER")
+	dbPassword := os.Getenv("DB_PASSWORD")
+	dbUrl := os.Getenv("DB_URL")
+	dbName := os.Getenv("DB_NAME")
+	dbPort := os.Getenv("DB_PORT")
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local", dbUser, dbPassword, dbUrl, dbPort, dbName)
+
 	maxConnectionRetryCount := 5
 
 	for i := 0; i < maxConnectionRetryCount; i++ {
